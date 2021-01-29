@@ -1,10 +1,10 @@
-require(["esri/Map", "esri/views/MapView"], function (
-    Map, 
-    MapView
-    ) {
+require(["esri/Map", "esri/views/MapView"], function (Map, MapView) {
 
+    // Do not require an API key when using select basemaps
+    // see: https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap 
+    
     const map = new Map({
-        basemap: "arcgis-topographic"
+        basemap: "dark-gray"
     });
 
     view = new MapView({
