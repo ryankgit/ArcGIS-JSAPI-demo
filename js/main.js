@@ -2,10 +2,11 @@ require([
     "esri/Map", 
     "esri/layers/FeatureLayer", 
     "esri/views/MapView", 
-    "esri/PopupTemplate"
-], function (Map, FeatureLayer, MapView, PopupTemplate) {
+    "esri/PopupTemplate",
+    "esri/widgets/Legend"
+], function (Map, FeatureLayer, MapView, PopupTemplate, Legend) {
 
-    // Do not require an API key when using select basemaps
+    // Does not require an API key when using select basemaps
     // see: https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap 
     
     // create map
@@ -130,7 +131,6 @@ require([
         "maxDataValue": 378
       };
 
-
     // create simple render, set visual variables
     const renderer = {
         type: "simple",     // autocasts as new SimpleRenderer
@@ -203,6 +203,19 @@ require([
             }
           }
     });
+
+    // setup Legend
+    const legend = new Legend({
+        view: view,
+        layerInfos: [{
+            layer: fl,
+            title: "Chicago Crime Tracts"
+          }
+        ]
+      });
+
+    // add Legend widget to view's UI
+    view.ui.add(legend, "top-right");
 
     // add FeatureLayer fl to map when MapView is loaded
     view.when(function() {
