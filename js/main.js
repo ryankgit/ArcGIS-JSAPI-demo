@@ -1,4 +1,9 @@
-require(["esri/Map", "esri/layers/FeatureLayer", "esri/views/MapView"], function (Map, FeatureLayer, MapView) {
+require([
+    "esri/Map", 
+    "esri/layers/FeatureLayer", 
+    "esri/views/MapView", 
+    "esri/PopupTemplate"
+], function (Map, FeatureLayer, MapView, PopupTemplate) {
 
     // Do not require an API key when using select basemaps
     // see: https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap 
@@ -141,9 +146,45 @@ require(["esri/Map", "esri/layers/FeatureLayer", "esri/views/MapView"], function
         visualVariables: [colorVisVar, sizeVisVar]
     };
 
+    // create PopupTemplate
+    const popupTemplate = new PopupTemplate({
+        title: "Crime in Tract {NAME}",
+        content: [{
+            // Specify the type of popup element - fields
+            //fieldInfos autocasts
+            type: "fields",
+            fieldInfos: [{
+                fieldName: "CrimeCnt",
+                visible: true,
+                label: "Number of crimes: "
+              },
+              {
+                fieldName: "NarcoticsC",
+                visible: true,
+                label: "Number of narcotics crimes: "
+              },
+            ]
+          },
+          {
+            type: "media",
+            // mediainfos autocasts
+            mediaInfos: [{
+              title: "Chicago Crime and Narcotics Rates",
+              type: "column-chart",
+              caption: "Crime rate in comparison to narcotics rate",
+              value: {
+                theme: "Julie",
+                fields: ["CrimeRate", "NarcoticsR"],
+              }
+            }]
+          }
+        ]
+      });
+
     // create FeatureLayer
     const fl = new FeatureLayer({
         url: "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/Chicago_Crime_Tracts/FeatureServer/0",
+        popupTemplate: popupTemplate,
         outFields: ["*"],
         renderer: renderer
     }); 
@@ -153,7 +194,14 @@ require(["esri/Map", "esri/layers/FeatureLayer", "esri/views/MapView"], function
         container: "viewDiv",
         map: map,
         zoom: 10,
-        center: [-87.66453728281347, 41.840392306471315]
+        center: [-87.66453728281347, 41.840392306471315],
+        popup: {
+            dockEnabled: true,
+            dockOptions: {
+              buttonEnabled: false,
+              breakpoint: false
+            }
+          }
     });
 
     // add FeatureLayer fl to map when MapView is loaded
