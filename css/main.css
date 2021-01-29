@@ -1,3 +1,4 @@
+/* Div defaults to 0% height/width; need to set height/width here*/
 html,
 body,
 #viewDiv {
